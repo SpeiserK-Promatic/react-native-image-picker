@@ -268,6 +268,9 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
     }
     else
     {
+      // fix android issue where file is deleted if you take a photo then start to take a 2nd photo but cancel - the 1st photo file is deleted
+      imageConfig = new ImageConfig(null, null, 0, 0, 100, 0, false);
+      
       requestCode = REQUEST_LAUNCH_IMAGE_CAPTURE;
       cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -583,7 +586,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
         permissionsGranted = writePermission == PackageManager.PERMISSION_GRANTED;
         break;
       case REQUEST_PERMISSIONS_FOR_CAMERA:
-        permissionsGranted = cameraPermission == PackageManager.PERMISSION_GRANTED;
+        permissionsGranted = cameraPermission == PackageManager.PERMISSION_GRANTED && writePermission == PackageManager.PERMISSION_GRANTED;
         break;
     }
 
@@ -641,13 +644,13 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
             PERMISSIONS = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             break;
           case REQUEST_PERMISSIONS_FOR_CAMERA:
-            PERMISSIONS = new String[]{Manifest.permission.CAMERA};
+            PERMISSIONS = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
             break;
           default:
             PERMISSIONS = new String[]{};
             break;
         }
-        
+
         if (activity instanceof ReactActivity)
         {
           ((ReactActivity) activity).requestPermissions(PERMISSIONS, requestCode, listener);
