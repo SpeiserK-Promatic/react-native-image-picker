@@ -268,6 +268,9 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
     }
     else
     {
+      // fix android issue where file is deleted if you take a photo then start to take a 2nd photo but cancel - the 1st photo file is deleted
+      imageConfig = new ImageConfig(null, null, 0, 0, 100, 0, false);
+      
       requestCode = REQUEST_LAUNCH_IMAGE_CAPTURE;
       cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
