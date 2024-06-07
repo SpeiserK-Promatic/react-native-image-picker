@@ -36,15 +36,51 @@ p.s. React Native introduced AndroidX support in 0.60, which is a **breaking cha
 
 ```
 yarn add react-native-image-picker
-
-# RN >= 0.60
-npx pod-install
-
-# RN < 0.60
-react-native link react-native-image-picker
 ```
 
-You will also need to add `UsageDescription` on iOS and some permissions on Android, refer to the [Install doc](docs/Install.md).
+### New Architecture
+
+To take advantage of the new architecture run-
+
+#### iOS
+
+```bash
+RCT_NEW_ARCH_ENABLED=1 npx pod-install ios
+```
+
+#### Android
+
+Set `newArchEnabled` to `true` inside `android/gradle.properties`
+
+### Pre-Fabric (AKA not using the new architecture)
+
+```bash
+npx pod-install ios
+```
+
+## Post-install Steps
+
+### iOS
+
+Add the appropriate keys to your `Info.plist` depending on your requirement:
+
+| Requirement                    | Key                                                 |
+| ------------------------------ | --------------------------------------------------- |
+| Select image/video from photos | NSPhotoLibraryUsageDescription                      |
+| Capture Image                  | NSCameraUsageDescription                            |
+| Capture Video                  | NSCameraUsageDescription & NSMicrophoneUsageDescription |
+
+### Android
+
+No permissions required (`saveToPhotos` requires permission [check](#note-on-file-storage)).
+
+Note: This library does not require `Manifest.permission.CAMERA`, if your app declares as using this permission in manifest then you have to obtain the permission before using `launchCamera`.
+
+#### Targeting below Android API v30
+
+Check if your application meets the requirement for AndroidX Photo Picker, otherwise add the entry to your `AndroidManifest.xml`: <https://developer.android.com/training/data-storage/shared/photopicker#device-availability>
+
+Alternatively check out the example application's `example/android/app/src/main/AndroidManifest.xml`
 
 ## Usage
 
